@@ -1,4 +1,15 @@
-<?php require_once 'inc/database_class.php'; $db = new DataBase (); ?>
+<?php
+require_once 'inc/autoload.php';
+
+if ( isset( $_GET['user'] ) AND $_GET['user'] == 'logout' ) {
+
+	$user = new User ();
+	$user->logoutUser ();
+
+	header( "Location: /" );
+}
+
+?>
 
 <!DOCTYPE html>
 <html>
@@ -128,6 +139,48 @@
 			$( '#reg-popup .error' ).css( 'color', '#f00' );
 			$( '#reg-popup .error' ).text( reg_errors[reg_errors.length - 1] );
 			$( '#reg-popup .error' ).css( 'display', 'block' );
+		}
+	});
+
+	$('#auth-popup button').on("click", function() {
+		var login = $( '#auth-popup input[name="login"]' ).val();
+		var password = $( '#auth-popup input[name="password"]' ).val();
+		var action = 'auth';
+
+		var auth_errors = [];
+
+		if ( login == '' ) {
+			auth_errors.push( 'Заполните поле Логин!' );
+		}
+
+		if ( password == '' ) {
+			auth_errors.push( 'Заполните поле Пароль!' );
+		}
+
+		if ( auth_errors.length < 1 ) {
+			$.ajax({
+				url: "/inc/handlers.php",
+				type: 'post',
+				data: {action: action, login: login, password: password},
+				success: function( data ){
+					if (data[0])
+					{
+						document.location.href = '/account.php';
+					} else {
+						$( '#auth-popup .error' ).css( 'color', '#f00' );
+						$( '#auth-popup .error' ).text( data[1] );
+						$( '#auth-popup .error' ).css( 'display', 'block' );
+					}	
+				},
+				error: function(error){
+					alert('Ошибка AJAX: ' + error);
+				},
+				dataType: 'json'
+			});
+		} else {
+			$( '#auth-popup .error' ).css( 'color', '#f00' );
+			$( '#auth-popup .error' ).text( auth_errors[auth_errors.length - 1] );
+			$( '#auth-popup .error' ).css( 'display', 'block' );
 		}
 	});
 </script>

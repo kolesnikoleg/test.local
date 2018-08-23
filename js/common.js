@@ -33,5 +33,5 @@ $( '#reg-popup input, #auth-popup input' ).on( "click", function(){
 
 $( '.enter button' ).on( "click", function(){
 	$( '.error' ).css( 'display', 'none' );
-	$( '#reg-popup input' ).val('');
+	$( '#reg-popup input, #auth-popup input' ).val('');
 });

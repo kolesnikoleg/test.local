@@ -1,37 +1,60 @@
 <?php
-require_once 'config_class.php';
-require_once 'database_class.php';
-$db = new DataBase ();
-$config = new Config ();
+require_once 'autoload.php';
 
 if (isset($_POST['action']))
 {
 	if ($_POST['action'] === 'reg') 
 	{
 		if ( $_POST['login'] == '' ) {
-			echo json_encode( array( false, 'Заполните поле Логин!' ) );
-	        exit();
+			Validate::ajaxResult ( false, 'Заполните поле Логин!' );
 		}
 
 		if ( $_POST['password'] == '' ) {
-			echo json_encode( array( false, 'Заполните поле Пароль!' ) );
-	        exit();
+			Validate::ajaxResult ( false, 'Заполните поле Пароль!' );
 		}
 
-		$login = htmlspecialchars( addslashes( $_POST['login'] ) );
-		$password = md5( $_POST['password'].$config->secret );
+		$login = Validate::secure( $_POST['login'] );
+		$password = Validate::pass_hash( $_POST['password'] );
 
-		if ( $db->isNoExistUser($login) ) {
-			if ( $db->regNewUser( $login, $password ) ) {
-				echo json_encode( array( true ) );
-	        	exit();
+		$user = new User ();
+
+		if ( $user->isNoExistUser($login) ) {
+			if ( $user->regNewUser( $login, $password ) ) {
+				Validate::ajaxResult ( true );
 			} else {
-				echo json_encode( array( false, 'Произошла ошибка! Попробуйте позже.' ) );
-	        	exit();
+				Validate::ajaxResult ( false, 'Произошла ошибка! Попробуйте позже.' );
 			}
 		} else {
-			echo json_encode( array( false, 'Пользователь с таком Логином уже существует!' ) );
-	        exit();
+			Validate::ajaxResult ( false, 'Пользователь с таком Логином уже существует!' );
+		}
+	}
+
+	if ($_POST['action'] === 'auth') 
+	{
+		if ( $_POST['login'] == '' ) {
+			Validate::ajaxResult ( false, 'Заполните поле Логин!' );
+		}
+
+		if ( $_POST['password'] == '' ) {
+			Validate::ajaxResult ( false, 'Заполните поле Пароль!' );
+		}
+
+		$login = Validate::secure( $_POST['login'] );
+		$password = Validate::pass_hash( $_POST['password'] );
+
+		$user = new User ();
+
+		if ( !$user->isNoExistUser($login) ) {
+			if ( $user->loginPasswordCompare( $login, $password ) ) {
+				$user->loginUser( $login );
+				echo json_encode( array( true ) );
+				exit();
+			} else {
+				Validate::ajaxResult ( false, 'Вы ввели неправильный пароль!' );
+			}
+
+		} else {
+			Validate::ajaxResult ( false, 'Пользователя с таком Логином не существует!' );
 		}
 	}
 }
