@@ -2,7 +2,7 @@
 require_once 'inc/autoload.php';
 
 $user = new User ();
-if ( !$user->isAuth() ) {
+if (!$user->isAuth()) {
 	header( "Location: /" );
 }
 ?>

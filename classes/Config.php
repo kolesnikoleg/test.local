@@ -1,6 +1,6 @@
 <?php
-class Config {
-	
+class Config
+{
 	var $secret = 'dsfv4584sd';
 	var $host = 'localhost';
 	var $db = 'test';

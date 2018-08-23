@@ -1,7 +1,7 @@
 <?php
 require_once 'inc/autoload.php';
 
-if ( isset( $_GET['user'] ) AND $_GET['user'] == 'logout' ) {
+if (isset($_GET['user']) AND $_GET['user'] == 'logout') {
 
 	$user = new User ();
 	$user->logoutUser ();
@@ -89,98 +89,98 @@ if ( isset( $_GET['user'] ) AND $_GET['user'] == 'logout' ) {
 
 <script>
 	$('#reg-popup button').on("click", function() {
-		var login = $( '#reg-popup input[name="login"]' ).val();
-		var password = $( '#reg-popup input[name="password"]' ).val();
+		var login = $('#reg-popup input[name="login"]').val();
+		var password = $('#reg-popup input[name="password"]').val();
 		var action = 'reg';
 
 		var reg_errors = [];
 
-		function isValidEmailAddress( emailAddress ) {
+		function isValidEmailAddress(emailAddress) {
 			var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
 			return pattern.test(emailAddress);
 		}
 
-		if ( !isValidEmailAddress( login ) ) {
-			reg_errors.push( 'Введите корректный Email-адрес!' );
+		if (!isValidEmailAddress( login)) {
+			reg_errors.push('Введите корректный Email-адрес!');
 		}
 
-		if ( login == '' ) {
-			reg_errors.push( 'Заполните поле Логин!' );
+		if (login == '') {
+			reg_errors.push('Заполните поле Логин!');
 		}
 
-		if ( password == '' ) {
-			reg_errors.push( 'Заполните поле Пароль!' );
+		if (password == '') {
+			reg_errors.push('Заполните поле Пароль!');
 		}
 
-		if ( reg_errors.length < 1 ) {
+		if (reg_errors.length < 1) {
 			$.ajax({
 				url: "/inc/handlers.php",
 				type: 'post',
 				data: {action: action, login: login, password: password},
-				success: function( data ){
+				success: function(data){
 					if (data[0])
 					{
-						$( '#reg-popup input' ).val( '' );
-						$( '#reg-popup .error' ).css( 'color', '#00C90B' );
-						$( '#reg-popup .error' ).text( 'Вы успешно зарегистрированы!' );
-						$( '#reg-popup .error' ).css( 'display', 'block' );
+						$('#reg-popup input').val('');
+						$('#reg-popup .error').css('color', '#00C90B');
+						$('#reg-popup .error').text('Вы успешно зарегистрированы!');
+						$('#reg-popup .error').css('display', 'block');
 					} else {
-						$( '#reg-popup .error' ).css( 'color', '#f00' );
-						$( '#reg-popup .error' ).text( data[1] );
-						$( '#reg-popup .error' ).css( 'display', 'block' );
+						$('#reg-popup .error').css('color', '#f00');
+						$('#reg-popup .error').text(data[1]);
+						$('#reg-popup .error').css('display', 'block');
 					}	
 				},
-				error: function(error){
+				error: function(error) {
 					alert('Ошибка AJAX: ' + error);
 				},
 				dataType: 'json'
 			});
 		} else {
-			$( '#reg-popup .error' ).css( 'color', '#f00' );
-			$( '#reg-popup .error' ).text( reg_errors[reg_errors.length - 1] );
-			$( '#reg-popup .error' ).css( 'display', 'block' );
+			$('#reg-popup .error').css('color', '#f00');
+			$('#reg-popup .error').text(reg_errors[reg_errors.length - 1]);
+			$('#reg-popup .error').css('display', 'block');
 		}
 	});
 
 	$('#auth-popup button').on("click", function() {
-		var login = $( '#auth-popup input[name="login"]' ).val();
-		var password = $( '#auth-popup input[name="password"]' ).val();
+		var login = $('#auth-popup input[name="login"]').val();
+		var password = $('#auth-popup input[name="password"]').val();
 		var action = 'auth';
 
 		var auth_errors = [];
 
-		if ( login == '' ) {
-			auth_errors.push( 'Заполните поле Логин!' );
+		if (login == '') {
+			auth_errors.push('Заполните поле Логин!');
 		}
 
-		if ( password == '' ) {
-			auth_errors.push( 'Заполните поле Пароль!' );
+		if (password == '') {
+			auth_errors.push('Заполните поле Пароль!');
 		}
 
-		if ( auth_errors.length < 1 ) {
+		if (auth_errors.length < 1) {
 			$.ajax({
 				url: "/inc/handlers.php",
 				type: 'post',
 				data: {action: action, login: login, password: password},
-				success: function( data ){
+				success: function(data) {
 					if (data[0])
 					{
 						document.location.href = '/account.php';
 					} else {
-						$( '#auth-popup .error' ).css( 'color', '#f00' );
-						$( '#auth-popup .error' ).text( data[1] );
-						$( '#auth-popup .error' ).css( 'display', 'block' );
+						$('#auth-popup .error').css('color', '#f00');
+						$('#auth-popup .error').text(data[1]);
+						$('#auth-popup .error').css('display', 'block');
 					}	
 				},
-				error: function(error){
+				error: function(error) {
 					alert('Ошибка AJAX: ' + error);
 				},
 				dataType: 'json'
 			});
 		} else {
-			$( '#auth-popup .error' ).css( 'color', '#f00' );
-			$( '#auth-popup .error' ).text( auth_errors[auth_errors.length - 1] );
-			$( '#auth-popup .error' ).css( 'display', 'block' );
+			$('#auth-popup .error').css('color', '#f00');
+			$('#auth-popup .error').text(auth_errors[auth_errors.length - 1]);
+			$('#auth-popup .error').css('display', 'block');
 		}
 	});
 </script>
